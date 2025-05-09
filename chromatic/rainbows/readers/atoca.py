@@ -82,6 +82,10 @@ def from_atoca(rainbow, filepath, order=1):
     # Loop over all input filenames.
     for i_file, f in enumerate(tqdm(filenames, leave=False)):
         hdu_list = fits.open(f)
+        
+        # Check if the EXTRACT1D extension exists in the FITS file
+        if not any(hdu.header.get('EXTNAME') == 'EXTRACT1D' for hdu in hdu_list[1:]):
+            raise ValueError(f"No 'EXTRACT1D' extension found in the FITS file '{f}'. Cannot extract spectra.")
 
         # Useful initializations for later.
         quantities = {}

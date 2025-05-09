@@ -207,6 +207,10 @@ def from_x1dints(rainbow, filepath, order=None, **kw):
 
         # open this fits file
         with fits.open(f) as hdu:
+            
+            # Check if the EXTRACT1D extension exists in the FITS file
+            if not any(ext.header.get('EXTNAME') == 'EXTRACT1D' for ext in hdu[1:]):
+                raise ValueError(f"No 'EXTRACT1D' extension found in the FITS file '{f}'. Cannot extract spectra.")
 
             # if this is the first one, populate the shared stuff
             if i_file == 0:
